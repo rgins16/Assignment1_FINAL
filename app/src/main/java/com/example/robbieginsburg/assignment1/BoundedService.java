@@ -145,6 +145,8 @@ public class BoundedService extends Service implements SensorEventListener {
         sensorManager_ = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometer_ = sensorManager_.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager_.registerListener(this, accelerometer_, SensorManager.SENSOR_DELAY_NORMAL, DELAY);
+        
+        activity = " ";
     }
 
     @Override
