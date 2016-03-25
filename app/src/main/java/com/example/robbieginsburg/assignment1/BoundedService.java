@@ -18,7 +18,7 @@ public class BoundedService extends Service implements SensorEventListener {
     private Sensor accelerometer_;
 
     // number of seconds the activity will be written to the app (2 minutes)
-    private final int twoMinutesInSeconds = 3;
+    private final int twoMinutesInSeconds = 5;
 
     // counters for the positions
     private double a, b, c = 0;
@@ -193,6 +193,11 @@ public class BoundedService extends Service implements SensorEventListener {
             seconds = calendar.get(Calendar.SECOND);
             minutes = calendar.get(Calendar.MINUTE);
             hour = calendar.get(Calendar.HOUR);
+
+            // convert military time to am/pm time
+            if(hour == 0) {
+                hour = 12;
+            }
 
             // determine if time is AM or PM
             if(calendar.get(Calendar.AM_PM) == 0){
