@@ -18,7 +18,7 @@ public class BoundedService extends Service implements SensorEventListener {
     private Sensor accelerometer_;
 
     // number of seconds the activity will be written to the app (2 minutes)
-    private final int twoMinutesInSeconds = 5;
+    private final int twoMinutesInSeconds = 120;
 
     // counters for the positions
     private double a, b, c = 0;
@@ -182,9 +182,6 @@ public class BoundedService extends Service implements SensorEventListener {
             else if (rms > 6 && accelY > 5){
                 activity = "Walking";
             }
-            else {
-
-            }
 
             // updates the current date/time
             calendar = Calendar.getInstance();
@@ -258,9 +255,6 @@ public class BoundedService extends Service implements SensorEventListener {
         else if(activity.equals("Walking")){
             c += 1;
         }
-        else{
-
-        }
     }
 
     // function that determines which activity to write, and writes it to the app
@@ -287,8 +281,6 @@ public class BoundedService extends Service implements SensorEventListener {
             setTimesAndActivities();
             formatTime(AM_PM);
             activity1 = "Walking";
-        }
-        else{
         }
 
         // resets the counters
@@ -349,37 +341,6 @@ public class BoundedService extends Service implements SensorEventListener {
 
         time2 = time1;
         activity2 = activity1;
-    }
-
-    // this method is called in MainActivity()
-    // it is used to reset the value of everything
-    // this is need because the service is started as soon as it is created in MainActivity,
-    //  therefore all the data start getting collected as soon the app starts up
-    // this method is called when the start button is clicked
-    public void setBlank(){
-
-        elapsedSeconds = 0;
-
-        time1 = " ";
-        activity1 = " ";
-        time2 = " ";
-        activity2 = " ";
-        time3 = " ";
-        activity3 = " ";
-        time4 = " ";
-        activity4 = " ";
-        time5 = " ";
-        activity5 = " ";
-        time6 = " ";
-        activity6 = " ";
-        time7 = " ";
-        activity7 = " ";
-        time8 = " ";
-        activity8 = " ";
-        time9 = " ";
-        activity9 = " ";
-        time10 = " ";
-        activity10 = " ";
     }
 
     @Override

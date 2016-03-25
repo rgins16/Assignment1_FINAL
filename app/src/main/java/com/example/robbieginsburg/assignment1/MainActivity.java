@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     BoundedService.MyBinder binder_;
     BoundedService myService;
-    Boolean connected = false;
 
     private Handler myHandler = new Handler();
 
@@ -64,11 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setAction("Action", null).show();
             }
         });
-
-        //start the bounded service
-        Intent myIntent = new Intent(this, BoundedService.class);
-        bindService(myIntent, mConnection, BIND_AUTO_CREATE);
-        //bounded service is started
 
         start = (Button) findViewById(R.id.buttonStart);
         start.setOnClickListener(this);
@@ -170,13 +164,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(!press){
                     press = true;
 
+                    //start the bounded service
+                    Intent myIntent = new Intent(this, BoundedService.class);
+                    bindService(myIntent, mConnection, BIND_AUTO_CREATE);
+                    //bounded service is started
+
                     // deletes the data that has already been collected by the service
                     // the service has been collecting data since it was created in onCreate()
                     // this deletes all that data when the start button is pushed
-                    myService.setBlank();
-
-                    // start the runnable class that will keep running until the app is done
-                    myHandler.post(new Update());
+                    //myService.setBlank();
                 }
 
         }
@@ -187,12 +183,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onServiceConnected(ComponentName name, IBinder service) {
             binder_=(BoundedService.MyBinder)service;
             myService = binder_.getService();
-            connected = true;
+
+            // start the runnable class that will keep running until the app is done
+            myHandler.post(new Update());
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            connected = false;
         }
     };
 
@@ -249,15 +246,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (Environment.MEDIA_MOUNTED.equals(externalStorage)) {
 
                         try{
+                            // the content that will be written to the file on external storage
+                            String content = myService.getTime1() + " " + myService.getActivity1() + "\n";
 
-                        // the content that will be written to the file on external storage
-                        String content = myService.getTime1() + " " + myService.getActivity1() + "\n";
-
-                        // this is the code that writes the content to the file on the
-                        // external device
-                        FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-                        fileOutputStream.write(content.getBytes());
-                        fileOutputStream.close();
+                            // needed for the first activity recognition
+                            if(myService.getTime1() != null && myService.getActivity1() != null) {
+                            // this is the code that writes the content to the file on the
+                            // external device
+                            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+                            fileOutputStream.write(content.getBytes());
+                            fileOutputStream.close();
+                        }
                     }
                     catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 // if external storage is not available, write this Toast message
-                else{
+                else {
                     Toast toast = Toast.makeText(getApplicationContext(), "External Storage Is Not Available", Toast.LENGTH_LONG);
                     toast.show();
                 }
